@@ -1,0 +1,15 @@
+name: wildfire-project
+
+dependencies:
+  - python=3.10
+  - pandas
+  - matplotlib
+  - tqdm
+  - tensorflow
+  - xgboost
+  - modin
+  - pip
+#  - pip:
+#      - tensorflow-addons
+channels:
+  - conda-forge
