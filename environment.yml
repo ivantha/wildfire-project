@@ -1,13 +1,21 @@
 name: wildfire-project
 
 dependencies:
-  - python=3.10
+  - python=3.8
+  - jupyterlab
+  - ipykernel
+  - ipywidgets
+  - nb_conda_kernels
   - pandas
+  - modin
+  - numpy
   - matplotlib
+  - seaborn
   - tqdm
   - tensorflow
   - xgboost
-  - modin
+  - catboost
+  - lightgbm
   - pip
 #  - pip:
 #      - tensorflow-addons
