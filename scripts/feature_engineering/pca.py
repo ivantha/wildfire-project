@@ -53,8 +53,8 @@ if __name__ == '__main__':
     # Initialize Spark session
     spark = SparkSession.builder.master("local").appName("PCA").getOrCreate()
 
-    do_pca(spark, num_cols=100, dataset_name="pca_100")
-    # do_pca(spark, num_cols=75, dataset_name="pca_75")
+    # do_pca(spark, num_cols=100, dataset_name="pca_100")
+    do_pca(spark, num_cols=75, dataset_name="pca_75")
     # do_pca(spark, num_cols=50, dataset_name="pca_50")
     # do_pca(spark, num_cols=2, dataset_name="pca_2")
 
