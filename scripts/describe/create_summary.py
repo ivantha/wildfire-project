@@ -57,7 +57,8 @@ if __name__ == '__main__':
         os.mkdir(summary_directory_path)
 
     # create_summary(spark, 'simplified')
-    create_summary(spark, 'good')
+    # create_summary(spark, 'good')
+    create_summary(spark, 'small')
 
     # Stop the Spark session
     spark.stop()

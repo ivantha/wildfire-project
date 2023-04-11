@@ -1,11 +1,16 @@
 import pandas as pd
+from pyspark.sql import SparkSession
 
-from legacy.data import read_dataset
+# Initialize Spark session
+spark = SparkSession.builder \
+    .appName("Filter by importance - Percent") \
+    .config("spark.driver.memory", "20g") \
+    .getOrCreate()
 
 # Load data
-df = read_dataset()
+df = spark.read.parquet(f"../../tmp/datasets/good")
 
-feature_importance_df = pd.read_csv("../tmp/feature_importance.csv")
+feature_importance_df = pd.read_csv("../../tmp/feature_importance.csv")
 
 # Set the percentage of rows (columns) to keep based on importance
 percentage_to_keep = 0.4  # 50%
@@ -23,4 +28,7 @@ filtered_main_df = df[filtered_columns]
 # Add the target column 'frp' to the principal_df
 filtered_main_df['frp'] = df['frp']
 
-filtered_main_df.to_csv('../tmp/importance_dataset.csv', index=False)
+filtered_main_df.to_csv('../../tmp/datasets/importance.csv', index=False)
+
+# Stop the Spark session
+spark.stop()

@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 from legacy.data import read_complete_dataset
 
 # Load data
-df = read_complete_dataset()
+df = spark.read.parquet(f"../../tmp/datasets/good")
 
 df['frp'] = df['frp'].apply(lambda x: sum(map(float, x.split(','))) / len(x.split(',')))
 

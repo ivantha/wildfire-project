@@ -1,28 +1,24 @@
+import pyspark.sql.functions as F
 from pyspark.ml import Pipeline
+from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.regression import RandomForestRegressor
-from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.sql import SparkSession
-import pyspark.sql.functions as F
 
-from pyspark.sql.functions import udf
-from pyspark.sql.types import FloatType
+from util.data import process_frp
 
-# Define a UDF to process the 'frp' column
-@udf(returnType=FloatType())
-def process_frp(frp):
-    values = list(map(float, frp.split(',')))
-    return sum(values) / len(values)
-
-# Initialize Spark session with RAPIDS configuration
+# Initialize Spark session
+# spark = SparkSession.builder \
+#     .appName("Random Forest Regressor") \
+#     .config("spark.driver.memory", "20g") \
+#     .getOrCreate()
 spark = SparkSession.builder \
     .appName("Random Forest Regressor") \
-    .config("spark.plugins", "com.nvidia.spark.SQLPlugin") \
-    .config("spark.rapids.sql.concurrentGpuTasks", "2") \
-    .config("spark.executor.memory", "20g") \
-    .config("spark.executor.resource.gpu.amount", "1") \
-    .config("spark.task.resource.gpu.amount", "0.5") \
-    .config("spark.driver.memory", "20g") \
+    .config("spark.master", "local[*]") \
+    .config("spark.driver.memory", "16g") \
+    .config("spark.executor.memory", "16g") \
+    .config("spark.driver.cores", "4") \
+    .config("spark.executor.cores", "4") \
     .getOrCreate()
 
 # Load data
@@ -32,7 +28,9 @@ df = spark.read.parquet(f"../../tmp/datasets/good")
 df = df.withColumn("frp", process_frp(F.col("frp")))
 
 # Drop unnecessary columns
-df = df.drop("Polygon_ID")
+df = df.drop(
+    "Polygon_ID"
+)
 
 # Split data into training and testing sets
 train, test = df.randomSplit([0.9, 0.1], seed=42)
@@ -44,11 +42,12 @@ assembler = VectorAssembler(inputCols=feature_cols, outputCol="features", handle
 # Set Random Forest parameters
 params = {
     'numTrees': 10,
-    'maxDepth': 40,
-    'minInstancesPerNode': 2,
-    'minInfoGain': 0.0,
+    'maxDepth': 20,
+    # 'minInstancesPerNode': 2,
+    # 'minInfoGain': 0.0,
     'seed': 42
 }
+
 
 # Train the model
 rf = RandomForestRegressor(labelCol="frp", featuresCol="features", **params)

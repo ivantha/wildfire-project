@@ -18,6 +18,9 @@ dependencies:
   - catboost
   - lightgbm
   - pyspark
+  - findspark
+  - numba
+  - pyarrow
   - pip
 #  - pip:
 #      - tensorflow-addons
