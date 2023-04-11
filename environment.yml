@@ -12,10 +12,12 @@ dependencies:
   - matplotlib
   - seaborn
   - tqdm
+  - requests
   - tensorflow
   - xgboost
   - catboost
   - lightgbm
+  - pyspark
   - pip
 #  - pip:
 #      - tensorflow-addons

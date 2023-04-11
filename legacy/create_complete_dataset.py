@@ -1,7 +1,6 @@
-import pandas as pd
 import csv
 
-from util.data import read_dataset
+from legacy.data import read_dataset
 
 # Load data
 df = read_dataset()

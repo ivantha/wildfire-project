@@ -3,7 +3,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
-from util.data import read_dataset, read_complete_dataset
+from legacy.data import read_complete_dataset
 
 # Load data
 df = read_complete_dataset()

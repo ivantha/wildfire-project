@@ -2,7 +2,7 @@ import csv
 
 import pandas as pd
 
-from util.data import read_dataset
+from legacy.data import read_dataset
 
 # Load data
 df = read_dataset()

@@ -1,9 +1,8 @@
 import pandas as pd
-import csv
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
-from util.data import read_complete_dataset
+from legacy.data import read_complete_dataset
 
 # Load data
 df = read_complete_dataset()

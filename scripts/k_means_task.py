@@ -1,9 +1,8 @@
-import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 
-from util.data import read_complete_dataset
+from legacy.data import read_complete_dataset
 
 # Load data
 df = read_complete_dataset()

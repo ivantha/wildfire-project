@@ -4,7 +4,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-from util.data import read_dataset, read_complete_dataset, read_pca, read_importance_dataset
+from legacy.data import read_importance_dataset
 
 # Load data
 df = read_importance_dataset()
