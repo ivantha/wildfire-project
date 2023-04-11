@@ -1,13 +1,19 @@
 import numpy as np
 import xgboost as xgb
+from pyspark.sql import SparkSession
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-from legacy.data import read_importance_dataset
+spark = SparkSession.builder \
+    .appName("XGBoostRegression") \
+    .config("spark.driver.memory", "20g") \
+    .getOrCreate()
 
 # Load data
-df = read_importance_dataset()
+df = spark.read.parquet(f"../../tmp/datasets/small")
+
+df = df.toPandas()
 
 df['frp'] = df['frp'].apply(lambda x: sum(map(float, x.split(','))) / len(x.split(',')))
 

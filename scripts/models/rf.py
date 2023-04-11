@@ -1,23 +1,23 @@
 import numpy as np
+from pyspark.sql import SparkSession
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
-from legacy.data import read_complete_dataset
+spark = SparkSession.builder \
+    .appName("Random Forest Regressor") \
+    .config("spark.driver.memory", "20g") \
+    .getOrCreate()
 
 # Load data
-df = read_complete_dataset()
+df = spark.read.parquet(f"../../tmp/datasets/small")
+
+df = df.toPandas()
 
 df['frp'] = df['frp'].apply(lambda x: sum(map(float, x.split(','))) / len(x.split(',')))
 
 df = df.drop([
     'Polygon_ID',
-    'acq_date',
-    'acq_time',
-    # 'Neighbour',
-    # 'Neighbour_frp',
-    'CH_mean',
-    'Neighbour_CH_mean'
 ], axis=1)
 
 # Split data into training and testing sets
