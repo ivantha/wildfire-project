@@ -8,7 +8,7 @@ from util.data import process_frp
 
 def do_pca(spark, num_cols, dataset_name):
     # Load data
-    df = spark.read.parquet(f"../../tmp/datasets/good")
+    df = spark.read.parquet(f"../../tmp/datasets/small")
 
     # Calculate average of the 'frp' column
     df = df.withColumn("frp", process_frp(F.col("frp")))
@@ -53,10 +53,11 @@ if __name__ == '__main__':
     # Initialize Spark session
     spark = SparkSession.builder.master("local").appName("PCA").getOrCreate()
 
-    # do_pca(spark, num_cols=100, dataset_name="pca_100")
+    do_pca(spark, num_cols=100, dataset_name="pca_100")
     do_pca(spark, num_cols=75, dataset_name="pca_75")
-    # do_pca(spark, num_cols=50, dataset_name="pca_50")
-    # do_pca(spark, num_cols=2, dataset_name="pca_2")
+    do_pca(spark, num_cols=50, dataset_name="pca_50")
+    do_pca(spark, num_cols=25, dataset_name="pca_25")
+    do_pca(spark, num_cols=2, dataset_name="pca_2")
 
     # Stop Spark session
     spark.stop()
