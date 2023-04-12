@@ -7,12 +7,22 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-
 from util.timer import timeit
+
+
+def check_gpu_availability():
+    physical_devices = tf.config.list_physical_devices('GPU')
+    if len(physical_devices) > 0:
+        print("GPU is available")
+        tf.config.experimental.set_memory_growth(physical_devices[0], True)
+    else:
+        print("GPU is not available. Using CPU instead.")
 
 
 @timeit
 def main():
+    check_gpu_availability()
+
     # Load data
     df = pd.read_parquet(f"../../tmp/datasets/tiny")
 
