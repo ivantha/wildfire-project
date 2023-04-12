@@ -1,5 +1,4 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col
 
 # Initialize Spark session
 spark = SparkSession.builder \
@@ -23,6 +22,9 @@ columns_to_drop = [
     'Neighbour_c_longitude',
 ]
 df = df.drop(*columns_to_drop)
+
+# Coalesce the DataFrame into a single partition
+df = df.coalesce(1)
 
 # Save the cleaned datasets as a Parquet file
 df.write.mode("overwrite").parquet('../../tmp/datasets/good')

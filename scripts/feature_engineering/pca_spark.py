@@ -42,8 +42,13 @@ def do_pca(spark, num_cols, dataset_name):
     model = pipeline.fit(df)
     principal_df = model.transform(df)
 
+    # Convert pca_features column into separate columns for each PCA feature
+    pca_columns = [f"pca_{i+1}" for i in range(n_components)]
+    for i, col_name in enumerate(pca_columns):
+        principal_df = principal_df.withColumn(col_name, F.col("pca_features")[i])
+
     # Select the PCA features and the target column 'frp'
-    principal_df = principal_df.select("pca_features", target_column)
+    principal_df = principal_df.select(pca_columns + [target_column])
 
     # Save the resulting DataFrame to a Parquet file
     principal_df.write.parquet(f"../../tmp/datasets/{dataset_name}", mode="overwrite")
@@ -53,10 +58,10 @@ if __name__ == '__main__':
     # Initialize Spark session
     spark = SparkSession.builder.master("local").appName("PCA").getOrCreate()
 
-    do_pca(spark, num_cols=100, dataset_name="pca_100")
-    do_pca(spark, num_cols=75, dataset_name="pca_75")
-    do_pca(spark, num_cols=50, dataset_name="pca_50")
-    do_pca(spark, num_cols=25, dataset_name="pca_25")
+    # do_pca(spark, num_cols=100, dataset_name="pca_100")
+    # do_pca(spark, num_cols=75, dataset_name="pca_75")
+    # do_pca(spark, num_cols=50, dataset_name="pca_50")
+    # do_pca(spark, num_cols=25, dataset_name="pca_25")
     do_pca(spark, num_cols=2, dataset_name="pca_2")
 
     # Stop Spark session

@@ -33,6 +33,9 @@ print(f'Percentage of rows with an empty value in any column: {num_rows_with_emp
 # Remove the rows with an empty value in any column
 df = df.dropna(subset=None)
 
+# Coalesce the DataFrame into a single partition
+df = df.coalesce(1)
+
 # Save the cleaned datasets as a Parquet file
 df.write.mode("overwrite").parquet('../../tmp/datasets/small')
 
