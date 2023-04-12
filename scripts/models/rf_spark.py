@@ -48,7 +48,6 @@ params = {
     'seed': 42
 }
 
-
 # Train the model
 rf = RandomForestRegressor(labelCol="frp", featuresCol="features", **params)
 pipeline = Pipeline(stages=[assembler, rf])

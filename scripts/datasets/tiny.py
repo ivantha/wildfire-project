@@ -11,7 +11,7 @@ spark = SparkSession.builder \
 df = spark.read.parquet(f"../../tmp/datasets/small")
 
 # Randomly sample the dataset
-sampled_df = df.orderBy(rand()).limit(int(df.count() * 0.1))  # sampling 10% of the data
+sampled_df = df.orderBy(rand()).limit(int(df.count() * 0.01))  # sampling 10% of the data
 
 # Coalesce the DataFrame into a single partition
 sampled_df = sampled_df.coalesce(1)
