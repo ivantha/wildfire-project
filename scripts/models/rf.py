@@ -11,9 +11,9 @@ from util.timer import timeit
 @timeit
 def main():
     # Load data
-    df = pd.read_parquet(f"../../tmp/datasets/tiny")
+    df = pd.read_parquet(f"../../tmp/datasets/processed")
 
-    df['frp'] = df['frp'].apply(lambda x: sum(map(float, x.split(','))) / len(x.split(',')))
+    # df['frp'] = df['frp'].apply(lambda x: sum(map(float, x.split(','))) / len(x.split(',')))
 
     df = df.drop([
         'Polygon_ID',

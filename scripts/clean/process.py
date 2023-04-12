@@ -1,7 +1,9 @@
+import pyspark.sql.functions as F
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
 from pyspark.sql.types import DoubleType, FloatType, IntegerType, LongType
 
+from util.data import process_frp
 from util.timer import timeit
 
 
@@ -34,11 +36,16 @@ def main():
     # Load data
     df = spark.read.parquet(f"../../tmp/datasets/tiny")
 
+    # Calculate average of the 'frp' column
+    df = df.withColumn("frp", process_frp(F.col("frp")))
+
     print(f"# of rows before removing outliers: {df.count()}:,")
 
+    # Manual list of numerical columns
+    numerical_columns = ["frp"]
+
     # Automatically filter numerical columns based on DataFrame schema
-    numerical_columns = [field.name for field in df.schema.fields if
-                         field.dataType in (FloatType(), DoubleType(), IntegerType(), LongType())]
+    # numerical_columns = [field.name for field in df.schema.fields if field.dataType in (FloatType(), DoubleType(), IntegerType(), LongType())]
 
     cleaned_df = remove_outliers(df, numerical_columns)
 
