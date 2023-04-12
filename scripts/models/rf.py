@@ -1,24 +1,11 @@
 import numpy as np
-from pyspark.sql import SparkSession
+import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.model_selection import train_test_split
 
-spark = SparkSession.builder \
-    .appName("Random Forest Regressor") \
-    .config("spark.driver.memory", "20g") \
-    .config("spark.driver.maxResultSize", "10g") \
-    .getOrCreate()
-
 # Load data
-df = spark.read.parquet(f"../../tmp/datasets/small")
-
-df = df.toPandas()
-
-# Stop the Spark session
-spark.stop()
-
-print('Started cleaning data...')
+df = pd.read_parquet(f"../../tmp/datasets/tiny")
 
 df['frp'] = df['frp'].apply(lambda x: sum(map(float, x.split(','))) / len(x.split(',')))
 
@@ -45,8 +32,6 @@ params = {
     'n_jobs': -1,
     'verbose': 1
 }
-
-print('Started training model...')
 
 # Train the model
 model = RandomForestRegressor(**params)
