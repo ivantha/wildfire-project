@@ -1,18 +1,24 @@
 import numpy as np
 from pyspark.sql import SparkSession
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.model_selection import train_test_split
 
 spark = SparkSession.builder \
     .appName("Random Forest Regressor") \
     .config("spark.driver.memory", "20g") \
+    .config("spark.driver.maxResultSize", "10g") \
     .getOrCreate()
 
 # Load data
 df = spark.read.parquet(f"../../tmp/datasets/small")
 
 df = df.toPandas()
+
+# Stop the Spark session
+spark.stop()
+
+print('Started cleaning data...')
 
 df['frp'] = df['frp'].apply(lambda x: sum(map(float, x.split(','))) / len(x.split(',')))
 
@@ -40,6 +46,8 @@ params = {
     'verbose': 1
 }
 
+print('Started training model...')
+
 # Train the model
 model = RandomForestRegressor(**params)
 model.fit(X_train, y_train)
@@ -50,9 +58,11 @@ y_pred = model.predict(X_test)
 # Calculate evaluation metrics
 mse = mean_squared_error(y_test, y_pred)
 rmse = np.sqrt(mse)
+mae = mean_absolute_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
 
 # Print evaluation metrics
 print('Mean Squared Error:', mse)
 print('Root Mean Squared Error:', rmse)
+print('Mean Absolute Error:', mae)
 print('R-squared:', r2)

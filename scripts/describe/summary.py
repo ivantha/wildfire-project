@@ -57,14 +57,15 @@ if __name__ == '__main__':
     if not os.path.exists(summary_directory_path):
         os.mkdir(summary_directory_path)
 
-    create_summary(spark, 'simplified')
-    create_summary(spark, 'good')
-    create_summary(spark, 'small')
-    create_summary(spark, 'pca_100')
-    create_summary(spark, 'pca_75')
-    create_summary(spark, 'pca_50')
-    create_summary(spark, 'pca_25')
-    create_summary(spark, 'pca_2')
+    # create_summary(spark, 'simplified')
+    # create_summary(spark, 'good')
+    # create_summary(spark, 'small')
+    create_summary(spark, 'tiny')
+    # create_summary(spark, 'pca_100')
+    # create_summary(spark, 'pca_75')
+    # create_summary(spark, 'pca_50')
+    # create_summary(spark, 'pca_25')
+    # create_summary(spark, 'pca_2')
 
     # Stop the Spark session
     spark.stop()
