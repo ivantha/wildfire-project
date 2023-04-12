@@ -4,7 +4,7 @@ from pyspark.sql import SparkSession
 spark = SparkSession.builder.appName("Convert Data Types").getOrCreate()
 
 # Read the CSV file into a DataFrame
-df = spark.read.format("csv").option("header", "true").option("inferSchema", "true").option("sep", "	").load("../../datasets/features_array.csv")
+df = spark.read.format("csv").option("header", "true").option("inferSchema", "true").option("sep", "	").load("../../dataset/features_array.csv")
 
 # Coalesce the DataFrame into a single partition
 df = df.coalesce(1)
