@@ -13,8 +13,6 @@ def main():
     # Load data
     df = pd.read_parquet(f"../../tmp/datasets/tiny")
 
-    df = df.toPandas()
-
     df['frp'] = df['frp'].apply(lambda x: sum(map(float, x.split(','))) / len(x.split(',')))
 
     df = df.drop([
