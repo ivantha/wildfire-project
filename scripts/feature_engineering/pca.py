@@ -57,6 +57,9 @@ def do_pca(spark, num_cols, dataset_name):
     selected_cols = ["frp"] + pca_columns
     result_selected = result.select(selected_cols)
 
+    # Coalesce the DataFrame into a single partition
+    result_selected = result_selected.coalesce(1)
+
     # Save the resulting DataFrame to a Parquet file
     result_selected.write.parquet(f"../../tmp/datasets/{dataset_name}", mode="overwrite")
 
