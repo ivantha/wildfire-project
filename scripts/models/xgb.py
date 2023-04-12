@@ -44,7 +44,7 @@ def main():
         'subsample': 0.5,
         # 'colsample_bytree': 0.8,
         'seed': 42,
-        # 'tree_method': 'gpu_hist',
+        'tree_method': 'gpu_hist',
         # 'n_jobs': -1,
         'verbosity': 1
     }
