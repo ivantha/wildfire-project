@@ -10,12 +10,21 @@ spark = SparkSession.builder \
     .getOrCreate()
 
 # Load data
-df = spark.read.parquet(f"../../tmp/datasets/good")
+df = spark.read.parquet(f"../tmp/datasets/original")
 
 # Drop unnecessary columns
 df = df.drop(
     "Polygon_ID",
-    "frp"
+    "frp",
+    'acq_date',
+    'acq_time',
+    'Neighbour_frp',
+    'Neighbour_acq_time',
+    'Shape',
+    'Neighbour_Shape',
+    'TEMP_ave',
+    'Neighbour_frp',
+    'Neighbour_c_longitude',
 )
 
 # Convert the features to a vector column
@@ -38,4 +47,4 @@ feature_importance = sorted(feature_importance, key=lambda x: abs(x[1]), reverse
 df_importance = pd.DataFrame(feature_importance, columns=['feature', 'correlation_coefficient'])
 
 # Save the feature importance to a CSV file
-df_importance.to_csv("../../tmp/feature_importance.csv", index=True)
+df_importance.to_csv("../tmp/feature_importance.csv", index=True)

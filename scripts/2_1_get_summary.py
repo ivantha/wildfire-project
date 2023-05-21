@@ -7,7 +7,7 @@ from pyspark.sql.functions import col, count, when
 
 def create_summary(spark, dataset_name):
     # Load data
-    df = spark.read.parquet(f"../../tmp/datasets/{dataset_name}")
+    df = spark.read.parquet(f"../tmp/datasets/{dataset_name}")
 
     # create a new DataFrame with column names and data types
     columns_df = df.dtypes
@@ -42,7 +42,7 @@ def create_summary(spark, dataset_name):
         columns_df.at[index, 'null_percentage'] = null_percentage
 
     # save the columns_df to a CSV file
-    columns_df.to_csv(f'../../tmp/summary/{dataset_name}.csv', quoting=csv.QUOTE_ALL, index=False, float_format='%.2f', sep=',')
+    columns_df.to_csv(f'../tmp/summary/{dataset_name}.csv', quoting=csv.QUOTE_ALL, index=False, float_format='%.2f', sep=',')
 
 
 if __name__ == '__main__':
@@ -53,14 +53,12 @@ if __name__ == '__main__':
         .getOrCreate()
 
     # Create the output directory
-    summary_directory_path = '../../tmp/summary'
+    summary_directory_path = '../tmp/summary'
     if not os.path.exists(summary_directory_path):
         os.mkdir(summary_directory_path)
 
-    # create_summary(spark, 'simplified')
-    # create_summary(spark, 'good')
-    # create_summary(spark, 'small')
-    create_summary(spark, 'tiny')
+    create_summary(spark, 'original')
+    create_summary(spark, 'processed')
     # create_summary(spark, 'pca_100')
     # create_summary(spark, 'pca_75')
     # create_summary(spark, 'pca_50')

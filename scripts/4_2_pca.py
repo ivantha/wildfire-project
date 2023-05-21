@@ -1,19 +1,15 @@
-import pyspark.sql.functions as F
 from pyspark.ml import Pipeline
 from pyspark.ml.feature import VectorAssembler, PCA
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import udf
 from pyspark.sql.types import ArrayType, DoubleType
 
-from util.data import process_frp
-
 
 def do_pca(spark, num_cols, dataset_name):
-    # Load data
-    df = spark.read.parquet(f"../../tmp/datasets/small")
+    print(f"Performing PCA on the {dataset_name} dataset...")
 
-    # Calculate average of the 'frp' column
-    df = df.withColumn("frp", process_frp(F.col("frp")))
+    # Load data
+    df = spark.read.parquet(f"../tmp/datasets/processed")
 
     # Drop unnecessary columns
     columns_to_drop = [
@@ -25,7 +21,7 @@ def do_pca(spark, num_cols, dataset_name):
     input_cols = [col for col in df.columns if col != "frp"]
 
     # Assemble the features into a single vector
-    assembler = VectorAssembler(inputCols=input_cols, outputCol="features")
+    assembler = VectorAssembler(inputCols=input_cols, outputCol="features", handleInvalid="skip")
 
     # Perform PCA on the dataset and reduce the number of columns to a given value n
     n = num_cols
@@ -61,7 +57,7 @@ def do_pca(spark, num_cols, dataset_name):
     result_selected = result_selected.coalesce(1)
 
     # Save the resulting DataFrame to a Parquet file
-    result_selected.write.parquet(f"../../tmp/datasets/{dataset_name}", mode="overwrite")
+    result_selected.write.parquet(f"../tmp/datasets/{dataset_name}", mode="overwrite")
 
 
 if __name__ == '__main__':

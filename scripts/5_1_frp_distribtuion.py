@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load data
-df = pd.read_parquet(f"../../tmp/datasets/processed")
+df = pd.read_parquet(f"../tmp/datasets/processed")
 
 # df['frp'] = df['frp'].apply(lambda x: sum(map(float, x.split(','))) / len(x.split(',')))
 
@@ -27,4 +27,4 @@ axs[1].set_title('Box Plot of FRP')
 plt.tight_layout()
 
 # Save the plot to disk as a PNG image
-plt.savefig('../../tmp/frp_distribution_plots.png')
+plt.savefig('../tmp/frp_distribution_plots.png')

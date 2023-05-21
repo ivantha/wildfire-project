@@ -5,7 +5,7 @@ from pyspark.ml.feature import VectorAssembler, StandardScaler
 from pyspark.ml.regression import GBTRegressor
 from pyspark.sql import SparkSession
 
-from util.data import process_frp
+from util.data import process_value_list_str
 
 # Initialize Spark session
 spark = SparkSession.builder.master("local") \
@@ -16,7 +16,7 @@ spark = SparkSession.builder.master("local") \
 df = spark.read.parquet(f"../../tmp/datasets/good")
 
 # Process the 'frp' column
-df = df.withColumn("frp", process_frp(F.col("frp")))
+df = df.withColumn("frp", process_value_list_str(F.col("frp")))
 
 df = df.drop(
     "Polygon_ID"

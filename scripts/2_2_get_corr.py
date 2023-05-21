@@ -12,7 +12,7 @@ spark = SparkSession.builder \
     .getOrCreate()
 
 # Load data
-df = spark.read.parquet(f"../../tmp/datasets/simplified")
+df = spark.read.parquet(f"../tmp/datasets/original")
 
 # Filter out string type columns
 num_cols = [col for col, dtype in zip(df.columns, df.dtypes) if dtype[1] != "string" and dtype[1] != "timestamp"]
@@ -45,7 +45,7 @@ correlation_pairs_df = pd.DataFrame({"Column1": column1, "Column2": column2, "Co
 correlation_pairs_df = correlation_pairs_df.sort_values(by="Correlation", ascending=False)
 
 # Save the sorted correlation pairs DataFrame to a CSV file
-correlation_pairs_df.to_csv("../../tmp/correlation_pairs.csv", index=False)
+correlation_pairs_df.to_csv("../tmp/correlation_pairs.csv", index=False)
 
 # Plot the correlation matrix using seaborn
 sns.set(style="white")
@@ -53,7 +53,7 @@ fig, ax = plt.subplots(figsize=(100, 100))
 sns.heatmap(corr_matrix_df, annot=True, fmt=".2f", linewidths=.5, cmap="coolwarm", ax=ax)
 
 # Save the plot as a high-resolution image
-fig.savefig('../../tmp/correlation_matrix.png', dpi=300)
+fig.savefig('../tmp/correlation_matrix.png', dpi=300)
 
 # Stop the Spark session
 spark.stop()
