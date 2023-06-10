@@ -1,3 +1,6 @@
+import os
+import time
+
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -10,8 +13,6 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-from util.timer import timeit
-
 
 def check_gpu_availability():
     physical_devices = tf.config.list_physical_devices('GPU')
@@ -22,8 +23,9 @@ def check_gpu_availability():
         print("GPU is not available. Using CPU instead.")
 
 
-@timeit
 def main():
+    start_time = time.time()
+
     check_gpu_availability()
 
     # Load data
@@ -61,10 +63,10 @@ def main():
         optimizer=Adam(lr=0.001),
         loss='mean_squared_error',
         metrics=[
-            MeanSquaredError(),
-            RootMeanSquaredError(),
-            MeanAbsoluteError(),
-            MeanAbsolutePercentageError(),
+            MeanSquaredError(name='mse'),
+            RootMeanSquaredError(name='rmse'),
+            MeanAbsoluteError(name='mae'),
+            MeanAbsolutePercentageError(name='mape'),
             # R2Score()
         ]
     )
@@ -76,7 +78,7 @@ def main():
     history = model.fit(
         X_train_scaled,
         y_train,
-        epochs=100,
+        epochs=2000,
         batch_size=32,
         verbose=1,
         validation_data=(X_test_scaled, y_test),
@@ -93,12 +95,27 @@ def main():
     mape = np.mean(np.abs((y_test - y_pred) / y_test)) * 100
     r2 = r2_score(y_test, y_pred)
 
+    # Calculate execution time
+    execution_time = time.time() - start_time
+
     # Print evaluation metrics
-    print('Mean Squared Error:', mse)
-    print('Root Mean Squared Error:', rmse)
-    print('Mean Absolute Error:', mae)
-    print('Mean Absolute Percentage Error:', mape)
-    print('R-squared:', r2)
+    print(f'MSE: {mse:,.2f}')
+    print(f'RMSE: {rmse:,.2f}')
+    print(f'MAE: {mae:,.2f}')
+    print(f'MAPE: {mape:,.2f}')
+    print(f'R2: {r2:,.2f}')
+    print(f'Execution time: {execution_time:,.2f} seconds')
+
+    # Write evaluation metrics to a text file
+    os.makedirs('../tmp/models', exist_ok=True)
+    with open('../tmp/models/nn.txt', 'w') as f:
+        f.write(f'MSE: {mse:,.2f}\n')
+        f.write(f'RMSE: {rmse:,.2f}\n')
+        f.write(f'MAE: {mae:,.2f}\n')
+        f.write(f'MAPE: {mape:,.2f}\n')
+        f.write(f'R2: {r2:,.2f}\n')
+        f.write(f'Execution time: {execution_time:,.2f} seconds\n')
+        f.flush()
 
 
 if __name__ == '__main__':

@@ -3,7 +3,7 @@ import time
 
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -33,8 +33,19 @@ def main():
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
 
+    # Set Random Forest parameters
+    params = {
+        'n_estimators': 10,
+        'max_depth': 30,
+        'min_samples_split': 2,
+        'min_samples_leaf': 1,
+        'random_state': 42,
+        'n_jobs': -1,
+        'verbose': 1
+    }
+
     # Train the model
-    model = LinearRegression()
+    model = RandomForestRegressor(**params)
     model.fit(X_train_scaled, y_train)
 
     # Make predictions on the testing set
@@ -60,7 +71,7 @@ def main():
 
     # Write evaluation metrics to a text file
     os.makedirs('../tmp/models', exist_ok=True)
-    with open('../tmp/models/lr.txt', 'w') as f:
+    with open('../tmp/models/rf.txt', 'w') as f:
         f.write(f'MSE: {mse:,.2f}\n')
         f.write(f'RMSE: {rmse:,.2f}\n')
         f.write(f'MAE: {mae:,.2f}\n')
